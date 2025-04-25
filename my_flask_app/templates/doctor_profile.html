@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doktor Profili</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .profile-section {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .navigation {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .nav-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            text-decoration: none;
+            border-radius: 4px;
+            color: white;
+        }
+        .nav-btn.home {
+            background-color: #17a2b8;
+        }
+        .nav-btn.logout {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Doktor Profili</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="profile-section">
+                <div class="form-group">
+
+
+                </div>
+
+                <div class="form-group">
+                    <label for="bolum_id">Uzmanlık Alanı:</label>
+                    <select id="bolum_id" name="bolum_id" required>
+                    {% for bolum_id, bolum_ad in bolumler %}
+                        <option value="{{ bolum_id }}" {% if doktor.bolum_id == bolum_id %}selected{% endif %}>
+                        {{ bolum_ad }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Çalışma Saatleri:</label>
+                    <div class="time-picker">
+                        <div>
+                            <span class="time-label">Başlangıç</span>
+                            <input type="time" id="calisma_baslangic" name="calisma_baslangic"
+                                   value="{{ doktor.calisma_saatleri.split(' - ')[0] if doktor.calisma_saatleri else '09:00' }}"
+                                   required>
+                        </div>
+                        <div>
+                            <span class="time-label">Bitiş</span>
+                            <input type="time" id="calisma_bitis" name="calisma_bitis"
+                                   value="{{ doktor.calisma_saatleri.split(' - ')[1] if doktor.calisma_saatleri else '17:00' }}"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="iletisim">İletişim Bilgileri:</label>
+                    <textarea id="iletisim" name="iletisim" required>{{ doktor.iletisim }}</textarea>
+                </div>
+
+                <button type="submit" class="btn">Profili Güncelle</button>
+            </div>
+        </form>
+
+        <div class="navigation">
+            <a href="{{ url_for('doctor_menu') }}" class="nav-btn home">Ana Menü</a>
+            <a href="{{ url_for('index') }}" class="nav-btn logout">Çıkış Yap</a>
+        </div>
+    </div>
+</body>
+</html>

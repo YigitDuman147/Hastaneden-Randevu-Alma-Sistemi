@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doktorlar</title>
+</head>
+<body>
+    <header>
+        <h1>Hastane Randevu Sistemi</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Ana Sayfa</a> |
+            <a href="{{ url_for('appointment') }}">Randevu Al</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Doktorlar Listesi</h2>
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>Uzmanlık</th>
+                    <th>Randevu Al</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doktor in doctors %}
+                <tr>
+                    <td>{{ doktor[1] }}</td> <!-- Doktorun adı -->
+                    <td>{{ doktor[2] }}</td> <!-- Doktorun soyadı -->
+                    <td>{{ doktor[3] }}</td> <!-- Doktorun uzmanlık alanı -->
+                    <td>
+                        <form action="{{ url_for('appointment') }}" method="get">
+                            <input type="hidden" name="doktor_id" value="{{ doktor[0] }}"> <!-- Doktor ID -->
+                            <button type="submit">Randevu Al</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; {{ year }} Hastane Randevu Sistemi</p>
+    </footer>
+</body>
+</html>

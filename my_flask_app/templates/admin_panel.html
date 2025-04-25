@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Paneli - Hastane Randevu Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #34495e;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection('doctors')">Doktorlar</a></li>
+                <li><a href="#" onclick="showSection('departments')">Bölümler</a></li>
+                <li><a href="/admin/logout">Çıkış Yap</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div id="success-message" class="success-message"></div>
+            <div id="error-message" class="error-message"></div>
+
+            <div id="doctors-section" class="content-section">
+                <div class="header">
+                    <h2>Doktor Yönetimi</h2>
+                    <button class="btn btn-primary" onclick="toggleForm('doctor-form')">Yeni Doktor Ekle</button>
+                </div>
+
+                <div id="doctor-form" style="display: none;">
+                    <form id="doctorForm" onsubmit="return handleDoctorSubmit(event)">
+                        <div class="form-group">
+                            <label>Ad</label>
+                            <input type="text" name="ad" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Soyad</label>
+                            <input type="text" name="soyad" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-posta</label>
+                            <input type="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Şifre</label>
+                            <input type="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bölüm</label>
+                            <select name="bolum_id" required>
+                                <option value="">Seçiniz</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+
+                <table id="doctors-table">
+                    <thead>
+                        <tr>
+                            <th>Ad</th>
+                            <th>Soyad</th>
+                            <th>E-posta</th>
+                            <th>Bölüm</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="departments-section" class="content-section" style="display: none;">
+                <div class="header">
+                    <h2>Bölüm Yönetimi</h2>
+                    <button class="btn btn-primary" onclick="toggleForm('department-form')">Yeni Bölüm Ekle</button>
+                </div>
+
+                <div id="department-form" style="display: none;">
+                    <form id="departmentForm" onsubmit="return handleDepartmentSubmit(event)">
+                        <div class="form-group">
+                            <label>Bölüm Adı</label>
+                            <input type="text" name="ad" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+
+                <table id="departments-table">
+                    <thead>
+                        <tr>
+                            <th>Bölüm Adı</th>
+                            <th>Doktor Sayısı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(`${sectionName}-section`).style.display = 'block';
+        }
+
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showMessage(message, isError = false) {
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+
+            if (isError) {
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            } else {
+                successMsg.textContent = message;
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+            }
+
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        async function loadDoctors() {
+            try {
+                const response = await fetch('/admin/doctors');
+                const doctors = await response.json();
+                const tbody = document.querySelector('#doctors-table tbody');
+                tbody.innerHTML = '';
+
+                doctors.forEach(doctor => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${doctor.ad}</td>
+                            <td>${doctor.soyad}</td>
+                            <td>${doctor.email}</td>
+                            <td>${doctor.bolum}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-primary" onclick="editDoctor(${doctor.id})">Düzenle</button>
+                                <button class="btn btn-danger" onclick="deleteDoctor(${doctor.id})">Sil</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                showMessage('Doktorlar yüklenirken hata oluştu', true);
+            }
+        }
+
+        async function loadDepartments() {
+            try {
+                const response = await fetch('/admin/departments');
+                const departments = await response.json();
+
+                // Bölümler tablosunu güncelle
+                const tbody = document.querySelector('#departments-table tbody');
+                tbody.innerHTML = '';
+
+                departments.forEach(dept => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${dept.ad}</td>
+                            <td>${dept.doktor_sayisi}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-danger" onclick="deleteDepartment(${dept.id})">Sil</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                // Doktor formundaki bölüm seçeneklerini güncelle
+                const select = document.querySelector('select[name="bolum_id"]');
+                select.innerHTML = '<option value="">Seçiniz</option>';
+                departments.forEach(dept => {
+                    select.innerHTML += `<option value="${dept.id}">${dept.ad}</option>`;
+                });
+            } catch (error) {
+                showMessage('Bölümler yüklenirken hata oluştu', true);
+            }
+        }
+
+        async function handleDoctorSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('/admin/doctors/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    showMessage('Doktor başarıyla eklendi');
+                    event.target.reset();
+                    toggleForm('doctor-form');
+                    loadDoctors();
+                } else {
+                    showMessage('Doktor eklenirken hata oluştu', true);
+                }
+            } catch (error) {
+                showMessage('Doktor eklenirken hata oluştu', true);
+            }
+            return false;
+        }
+
+        async function handleDepartmentSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('/admin/departments/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (response.ok) {
+                    showMessage('Bölüm başarıyla eklendi');
+                    event.target.reset();
+                    toggleForm('department-form');
+                    loadDepartments();
+                } else {
+                    showMessage('Bölüm eklenirken hata oluştu', true);
+                }
+            } catch (error) {
+                showMessage('Bölüm eklenirken hata oluştu', true);
+            }
+            return false;
+        }
+
+        async function deleteDoctor(doctorId) {
+            if (confirm('Bu doktoru silmek istediğinize emin misiniz?')) {
+                try {
+                    const response = await fetch(`/admin/doctors/${doctorId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showMessage('Doktor başarıyla silindi');
+                        loadDoctors();
+                    } else {
+                        showMessage('Doktor silinirken hata oluştu', true);
+                    }
+                } catch (error) {
+                    showMessage('Doktor silinirken hata oluştu', true);
+                }
+            }
+        }
+
+        async function deleteDepartment(deptId) {
+            if (confirm('Bu bölümü silmek istediğinize emin misiniz?')) {
+                try {
+                    const response = await fetch(`/admin/departments/${deptId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showMessage('Bölüm başarıyla silindi');
+                        loadDepartments();
+                    } else {
+                        showMessage('Bölüm silinirken hata oluştu', true);
+                    }
+                } catch (error) {
+                    showMessage('Bölüm silinirken hata oluştu', true);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('doctors');
+            loadDoctors();
+            loadDepartments();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hastane Yönetimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        function showForm() {
+            document.getElementById('/submit').classList.remove('hidden');
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
+            if (password !== confirmPassword) {
+                alert("Şifreler eşleşmiyor.");
+                return false;
+            }
+
+            if (!passwordPattern.test(password)) {
+                alert("Şifre en az 6 karakter, en az 1 büyük harf, 1 küçük harf ve 1 sayı içermelidir.");
+                return false;
+            }
+
+            // Kayıt başarılı mesajı
+            alert("Kayıt işleminiz başarıyla tamamlandı!");
+            return true; // Form gönderilmeye devam eder
+        }
+    </script>
+
+    <div class="container">
+
+
+        <div class="login-link">
+            <b>Randevu almak için sisteme kayıt olmanız gerekmektedir. <br>Kayıt olmak için <a href="#" onclick="showForm()">tıklayınız</a>.<br><br></b>
+            <p><i>Zaten bir hesabınız var mı? </i><a href="http://127.0.0.1:5000/login">Giriş Yapınız</a></p>
+            <p><i>Doktor musunuz? </i><a href="http://127.0.0.1:5000/doctor_login">Doktor Girişi</a></p>
+            <p><i></i><a href="http://127.0.0.1:5000/admin_login">Admin Girişi</a></p>
+        </div>
+
+        <form id="/submit" action="http://127.0.0.1:5000/submit" method="POST" class="hidden" onsubmit="return validatePassword()">
+            <h1>Hasta Kaydı</h1>
+            <label for="first_name">Ad:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            <label for="last_name">Soyad:</label>
+            <input type="text" id="last_name" name="last_name" required>
+            <label for="email">E-posta:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Şifre:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="confirm_password">Şifre Onayı:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+            <button type="submit">Kayıt Ol</button>
+        </form>
+    </div>
+
+</body>
+</html>

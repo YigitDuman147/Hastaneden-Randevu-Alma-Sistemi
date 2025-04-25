@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasta Paneli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Hastane Randevu Sistemi</h1>
+        <nav>
+            <a href="{{ url_for('appointment') }}">Randevu Al</a> |
+            <a href="{{ url_for('logout') }}">Çıkış Yap</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Hoş Geldiniz</h2>
+
+        <h3>Mevcut Randevularınız</h3>
+
+        {% if randevular %}
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Randevu ID</th>
+                    <th>Doktor Adı</th>
+                    <th>Doktor Soyadı</th>
+                    <th>Bölüm</th>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for randevu in randevular %}
+                <tr>
+                    <td>{{ randevu[0] }}</td>
+                    <td>{{ randevu[1] }}</td>
+                    <td>{{ randevu[2] }}</td>
+                    <td>{{ randevu[3] }}</td> <!-- Bölüm adı -->
+                    <td>{{ randevu[4] }}</td> <!-- Tarih -->
+                    <td>{{ randevu[5] }}</td> <!-- Saat -->
+                    <td>
+                        <form method="POST" action="{{ url_for('delete_appointment') }}">
+                            <input type="hidden" name="randevu_id" value="{{ randevu[0] }}">
+                            <button type="submit">İptal Et</button>
+                         </form>
+                    </td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        {% else %}
+        <p>Henüz bir randevunuz yok.</p>
+        {% endif %}
+
+
+    </main>
+
+    <footer>
+        <p>&copy; {{ year }} Hastane Randevu Sistemi</p>
+    </footer>
+</body>
+</html>

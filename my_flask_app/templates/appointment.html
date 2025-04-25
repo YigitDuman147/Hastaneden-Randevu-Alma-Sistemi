@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randevu Al</title>
+    <script>
+        function fetchDoctors() {
+            const bolumId = document.getElementById("bolum").value;
+
+            // Doktorları fetch ile getir
+            fetch(`/get_doctors?bolum_id=${bolumId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const doctorSelect = document.getElementById("doktor");
+                    doctorSelect.innerHTML = "<option value=''>Doktor Seç</option>"; // Önce temizle
+                    data.forEach(doctor => {
+                        const option = document.createElement("option");
+                        option.value = doctor.doktor_id;
+                        option.textContent = `${doctor.ad} ${doctor.soyad}`;
+                        doctorSelect.appendChild(option);
+                    });
+                })
+                .catch(err => {
+                    console.error("Hata:", err);
+                });
+        }
+
+        function setWorkingHours() {
+            const doktorId = document.getElementById("doktor").value;
+            const tarih = document.getElementById("tarih").value;
+            const saatSelect = document.getElementById("saat");
+
+            saatSelect.innerHTML = "<option value=''>Saat Seç</option>"; // Temizle
+
+            if (doktorId && tarih) {
+            fetch(`/get_available_hours?doktor_id=${doktorId}&tarih=${tarih}`)
+                .then(response => response.json())
+                .then(hours => {
+                hours.forEach(hour => {
+                    const option = document.createElement("option");
+                    option.value = hour;
+                    option.textContent = hour;
+                    saatSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error("Hata:", err));
+                }
+            }
+
+
+        function setWorkingHours() {
+            const doktorId = document.getElementById("doktor").value;
+            const saatSelect = document.getElementById("saat");
+
+            // Saat seçeneklerini temizle
+            saatSelect.innerHTML = "<option value=''>Saat Seç</option>";
+
+            // Doktora göre saat dilimlerini statik olarak belirliyoruz
+            if (doktorId) {
+                let hours = [];
+                if (doktorId == "1") { // Örnek doktor ID: 1
+                    hours = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"];
+                } else if (doktorId == "2") { // Örnek doktor ID: 2
+                    hours = ["13:00", "13:30", "14:00", "14:30", "15:00"];
+                } else {
+                    // Diğer doktorlar için varsayılan saatler
+                    hours = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"];
+                }
+
+                // Saat seçeneklerini ekle
+                hours.forEach(hour => {
+                    const option = document.createElement("option");
+                    option.value = hour;
+                    option.textContent = hour;
+                    saatSelect.appendChild(option);
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Randevu Al</h1>
+
+        <form action="/book_appointment" method="POST">
+            <label for="bolum">Bölüm:</label>
+            <select id="bolum" name="bolum_id" onchange="fetchDoctors()" required>
+                <option value="">Bölüm Seç</option>
+                {% for bolum in bolumler %}
+                <option value="{{ bolum[0] }}">{{ bolum[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="doktor">Doktor:</label>
+            <select id="doktor" name="doktor_id" onchange="setWorkingHours()" required>
+                <option value="">Doktor Seç</option>
+            </select>
+
+            <label for="tarih">Tarih:</label>
+            <input type="date" id="tarih" name="tarih" onchange="setWorkingHours()" required>
+
+            <label for="saat">Saat:</label>
+            <select id="saat" name="saat" required>
+                <option value="" disabled selected>Saat Seç</option>
+            </select>
+
+
+
+            <button type="submit">Randevu Al</button>
+        </form>
+
+        <!-- <h2>Mevcut Randevularınız</h2> -->
+        {% if randevular %}
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Randevu ID</th>
+                    <th>Doktor Adı</th>
+                    <th>Doktor Soyadı</th>
+                    <th>Doktor Soyadı</th>
+                    <th>Bölüm</th>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for randevu in randevular %}
+                <tr>
+                    <td>{{ randevu[0] }}</td>
+                    <td>{{ randevu[1] }}</td>
+                    <td>{{ randevu[2] }}</td>
+                    <td>{{ randevu[3] }}</td> <!-- Bölüm adı -->
+                    <td>{{ randevu[4] }}</td> <!-- Tarih -->
+                    <td>{{ randevu[5] }}</td> <!-- Saat -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <!-- <p>Henüz bir randevunuz yok.</p> -->
+        {% endif %}
+    </div>
+</body>
+</html>

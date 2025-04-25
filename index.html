@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hastane Yönetimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+
+ <script>
+        function showForm() {
+            document.getElementById('registration-form').classList.remove('hidden');
+        }
+
+     function validatePassword() {
+            const password = document.getElementById('password').value;
+            const password2 = document.getElementById('password2').value;
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
+            if (password !== password2) {
+                alert("Şifreler eşleşmiyor.");
+                return false;
+            }
+
+            if (!passwordPattern.test(password)) {
+                alert("Şifre en az 6 karakter, en az 1 büyük harf, 1 küçük harf ve 1 sayı içermelidir.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+    <div class="container">
+         Rest of your HTML content
+
+
+
+
+        <div class="login-link">
+            <b>Randevu almak için sisteme kayıt olmanız gerekmektedir. <br>Kayıt olmak için <a href="#" onclick="showForm()">tıklayınız</a>.<br><br>
+            <p><i>Zaten bir hesabınız var mı? </i><a href="http://127.0.0.1:5000/login">Giriş Yapınız</a></p>
+        </br></div>
+
+
+        <form id="registration-form" action="http://127.0.0.1:5000/submit" method="POST" class="hidden" onsubmit="return validatePassword()">
+            <h1>Hasta Kaydı</h1>
+            <label for="first_name">Ad:</label>
+            <input type="text" id="first_name" name="first_name" required>
+
+            <label for="last_name">Soyad:</label>
+            <input type="text" id="last_name" name="last_name" required>
+
+            <label for="email">E-posta:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Şifre:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="password2">Şifre tekrarı:</label>
+            <input type="password" id="password2" name="password2" required>
+
+
+
+            <button type="submit">Kaydet</button>
+        </form>
+
+    </div>
+</body>
+</html>
+
+-->

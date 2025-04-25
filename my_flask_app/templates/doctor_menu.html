@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doktor Menüsü</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .menu-item {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .menu-item:hover {
+            background-color: #218838;
+        }
+        .welcome-text {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Doktor Menüsü</h1>
+        <p class="welcome-text">Hoş geldiniz, Dr. {{ doktor.ad }} {{ doktor.soyad }}</p>
+
+        <a href="{{ url_for('doctor_appointments') }}" class="menu-item">Randevularım</a>
+        <a href="{{ url_for('doctor_profile') }}" class="menu-item">Profilim</a>
+        <a href="{{ url_for('index') }}" class="menu-item" style="background-color: #dc3545;">Çıkış Yap</a>
+    </div>
+</body>
+</html>
